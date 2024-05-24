@@ -1,0 +1,43 @@
+---
+version: 2
+registries:
+  vertx-dagger-bom:
+    type: "maven-repository"
+    url: "https://maven.pkg.github.com/BenSlabbert/vertx-dagger-bom"
+    username: "BenSlabbert"
+    password: "${{ secrets.GH_TOKEN }}"
+  git-version-extension:
+    type: "maven-repository"
+    url: "https://maven.pkg.github.com/BenSlabbert/git-version-extension"
+    username: "BenSlabbert"
+    password: "${{ secrets.GH_TOKEN }}"
+  vertx-dagger-codegen:
+    type: "maven-repository"
+    url: "https://maven.pkg.github.com/BenSlabbert/vertx-dagger-codegen"
+    username: "BenSlabbert"
+    password: "${{ secrets.GH_TOKEN }}"
+  tx-manager:
+    type: "maven-repository"
+    url: "https://maven.pkg.github.com/BenSlabbert/tx-manager"
+    username: "BenSlabbert"
+    password: "${{ secrets.GH_TOKEN }}"
+updates:
+- package-ecosystem: "maven"
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
+  registries:
+  - "vertx-dagger-bom"
+  - "git-version-extension"
+  - "vertx-dagger-codegen"
+  - "tx-manager"
+  labels:
+  - "dependencies"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+  open-pull-requests-limit: 10
+  labels:
+  - "dependencies"

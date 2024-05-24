@@ -1,0 +1,17 @@
+.idea/
+target/
+!target/lib
+!target/*.jar
+mvnw*
+dev-*-config.json
+docker-config.json
+*.tar.gz
+*.tar
+file-uploads
+.attach_pid*
+bin/
+*.iml
+.mvn/wrapper/
+dependency-reduced-pom.xml
+jte-classes/
+vertx-start-process.id

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>github.benslabbert</groupId>
+    <artifactId>vertx-dagger-bom</artifactId>
+    <version>1.6.0</version>
+  </parent>
+
+  <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+  <artifactId>commons-parent</artifactId>
+  <version>${revision}</version>
+  <packaging>pom</packaging>
+
+  <name>Vert.x Dagger Commons</name>
+  <description>Commons for Vertx Dagger Apps</description>
+
+  <modules>
+    <module>commons</module>
+    <module>db-migration</module>
+    <module>entity-generator</module>
+  </modules>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub BenSlabbert Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/BenSlabbert/vertx-dagger-commons</url>
+    </repository>
+  </distributionManagement>
+
+  <properties>
+    <revision>1.0.0-SNAPSHOT</revision>
+    <!--config-->
+    <quickBuild>false</quickBuild>
+    <docker.skip>${quickBuild}</docker.skip>
+    <shade.skip>${quickBuild}</shade.skip>
+
+    <!--deps-->
+    <vertx-dagger-codegen.version>1.4.0</vertx-dagger-codegen.version>
+    <tx-manager.version>1.0.7</tx-manager.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
+        <artifactId>annotation</artifactId>
+        <version>${vertx-dagger-codegen.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
+        <artifactId>commons</artifactId>
+        <version>${vertx-dagger-codegen.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
+        <artifactId>processor</artifactId>
+        <version>${vertx-dagger-codegen.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>github.benslabbert.txmanager</groupId>
+        <artifactId>txmanager</artifactId>
+        <version>${tx-manager.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <yaml>
+            <includes>
+              <include>**/*.yaml</include>
+              <include>**/*.yml</include>
+            </includes>
+            <jackson />
+          </yaml>
+          <pom>
+            <includes>
+              <include>pom.xml</include>
+            </includes>
+            <sortPom>
+              <encoding>UTF-8</encoding>
+              <lineSeparator>${line.separator}</lineSeparator>
+              <expandEmptyElements>false</expandEmptyElements>
+              <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+              <keepBlankLines>true</keepBlankLines>
+              <nrOfIndentSpace>2</nrOfIndentSpace>
+              <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
+              <sortDependencies>scope,group,artifactId</sortDependencies>
+              <sortPlugins>groupId,artifactId</sortPlugins>
+            </sortPom>
+          </pom>
+          <markdown>
+            <includes>
+              <include>**/*.md</include>
+            </includes>
+            <flexmark />
+          </markdown>
+          <java>
+            <includes>
+              <include>src/main/**/*.java</include>
+              <include>src/test/**/*.java</include>
+              <include>target/generated-sources/**/*.java</include>
+            </includes>
+            <googleJavaFormat>
+              <style>GOOGLE</style>
+              <reflowLongStrings>true</reflowLongStrings>
+            </googleJavaFormat>
+            <formatAnnotations />
+            <licenseHeader>
+              <content>/* Licensed under Apache-2.0 $YEAR. */</content>
+              <delimiter>package</delimiter>
+            </licenseHeader>
+          </java>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

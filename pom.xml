@@ -31,7 +31,6 @@
   </distributionManagement>
 
   <properties>
-    <revision>1.0.0-SNAPSHOT</revision>
     <!--config-->
     <quickBuild>false</quickBuild>
     <docker.skip>${quickBuild}</docker.skip>

@@ -18,6 +18,10 @@ test: fmt
 package: fmt
 	${M} package
 
+.PHONY: deploy
+deploy: fmt
+	${M} deploy
+
 .PHONY: verify
 verify: fmt
 	${M} verify

@@ -37,7 +37,7 @@
     <shade.skip>${quickBuild}</shade.skip>
 
     <!--deps-->
-    <vertx-dagger-codegen.version>1.4.0</vertx-dagger-codegen.version>
+    <vertx-dagger-codegen.version>1.8.0</vertx-dagger-codegen.version>
     <tx-manager.version>1.0.7</tx-manager.version>
   </properties>
 

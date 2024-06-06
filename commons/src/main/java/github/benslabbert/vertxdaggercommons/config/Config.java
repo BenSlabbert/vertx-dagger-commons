@@ -115,6 +115,10 @@ public record Config(
     PROD;
 
     static Profile fromString(String value) {
+      if (null != value) {
+        value = value.toLowerCase();
+      }
+
       return switch (value) {
         case "dev" -> DEV;
         case "prod" -> PROD;

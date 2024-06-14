@@ -38,7 +38,7 @@
 
     <!--deps-->
     <vertx-dagger-codegen.version>1.31.0</vertx-dagger-codegen.version>
-    <tx-manager.version>1.12.0</tx-manager.version>
+    <tx-manager.version>1.14.0</tx-manager.version>
   </properties>
 
   <dependencyManagement>

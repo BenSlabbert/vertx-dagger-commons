@@ -11,6 +11,8 @@ import github.benslabbert.vertxdaggercommons.web.serialization.JsonWriter;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import jakarta.validation.ConstraintViolation;
+import java.util.Set;
 
 public final class ResponseWriter {
 
@@ -38,5 +40,24 @@ public final class ResponseWriter {
 
   public static void writeBadRequest(RoutingContext ctx) {
     ctx.response().setStatusCode(BAD_REQUEST.code()).end().onFailure(ctx::fail);
+  }
+
+  public static <T> void writeBadRequest(
+      RoutingContext ctx, Set<ConstraintViolation<T>> violations) {
+    JsonObject json = convert(violations);
+    ctx.response().setStatusCode(BAD_REQUEST.code()).end(json.toBuffer()).onFailure(ctx::fail);
+  }
+
+  private static <T> JsonObject convert(Set<ConstraintViolation<T>> violations) {
+    return new JsonObject()
+        .put(
+            "errors",
+            violations.stream()
+                .map(
+                    violation ->
+                        new JsonObject()
+                            .put("field", violation.getPropertyPath().toString())
+                            .put("message", violation.getMessage()))
+                .toList());
   }
 }

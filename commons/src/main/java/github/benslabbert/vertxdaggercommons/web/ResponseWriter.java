@@ -11,6 +11,7 @@ import github.benslabbert.vertxdaggercommons.web.serialization.JsonWriter;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.HttpException;
 import jakarta.validation.ConstraintViolation;
 import java.util.Set;
 
@@ -28,6 +29,14 @@ public final class ResponseWriter {
         .setStatusCode(status.code())
         .end(jsonWriter.toJson().toBuffer())
         .onFailure(ctx::fail);
+  }
+
+  public static void writeError(RoutingContext ctx, Throwable err) {
+    if (err instanceof HttpException e) {
+      write(ctx, new JsonObject(), HttpResponseStatus.valueOf(e.getStatusCode()));
+      return;
+    }
+    ctx.response().setStatusCode(INTERNAL_SERVER_ERROR.code()).end().onFailure(ctx::fail);
   }
 
   public static void writeNoContent(RoutingContext ctx) {

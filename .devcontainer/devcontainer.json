@@ -2,10 +2,10 @@
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "22",
+      "version": "23",
       "jdkDistro": "tem",
       "installMaven": true,
-      "mavenVersion": "3.8.6"
+      "mavenVersion": "3.9.9"
     },
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
       "installDockerBuildx": true,

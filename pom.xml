@@ -31,11 +31,6 @@
   </distributionManagement>
 
   <properties>
-    <!--config-->
-    <quickBuild>false</quickBuild>
-    <docker.skip>${quickBuild}</docker.skip>
-    <shade.skip>${quickBuild}</shade.skip>
-
     <!--deps-->
     <vertx-dagger-codegen.version>1.52.0</vertx-dagger-codegen.version>
     <tx-manager.version>1.30.0</tx-manager.version>

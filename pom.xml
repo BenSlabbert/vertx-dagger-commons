@@ -33,7 +33,7 @@
   <properties>
     <!--deps-->
     <vertx-dagger-codegen.version>1.52.0</vertx-dagger-codegen.version>
-    <tx-manager.version>1.33.0</tx-manager.version>
+    <tx-manager.version>1.34.0</tx-manager.version>
   </properties>
 
   <dependencyManagement>

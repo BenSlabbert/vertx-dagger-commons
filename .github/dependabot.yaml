@@ -34,6 +34,7 @@ updates:
   - "tx-manager"
   labels:
   - "dependencies"
+  - "automerge"
   groups:
     updates:
       patterns:
@@ -48,6 +49,7 @@ updates:
   open-pull-requests-limit: 10
   labels:
   - "dependencies"
+  - "automerge"
   groups:
     updates:
       patterns:

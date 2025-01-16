@@ -13,7 +13,7 @@ public final class DockerContainers {
   public static final Network network = Network.newNetwork();
 
   public static final GenericContainer<?> POSTGRES =
-      new GenericContainer<>(DockerImageName.parse("postgres:15-alpine"))
+      new GenericContainer<>(DockerImageName.parse("postgres:17-alpine"))
           .withExposedPorts(5432)
           .withNetwork(network)
           .withNetworkAliases("postgres")

@@ -8,6 +8,8 @@ import org.jooq.meta.jaxb.Database;
 import org.jooq.meta.jaxb.Generate;
 import org.jooq.meta.jaxb.Generator;
 import org.jooq.meta.jaxb.Jdbc;
+import org.jooq.meta.jaxb.Logging;
+import org.jooq.meta.jaxb.OnError;
 import org.jooq.meta.jaxb.Strategy;
 import org.jooq.meta.jaxb.Target;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -15,7 +17,7 @@ import org.testcontainers.utility.DockerImageName;
 
 public class EntityGenerator {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String... args) throws Exception {
     if (args.length != 2) {
       throw new IllegalArgumentException("expecting 2 args: outputFolder and packageName");
     }
@@ -28,7 +30,7 @@ public class EntityGenerator {
 
   private static void generate(String folderPath, String packageName) throws Exception {
     var imageName =
-        DockerImageName.parse("postgres:15-alpine")
+        DockerImageName.parse("postgres:17-alpine")
             .asCompatibleSubstituteFor(PostgreSQLContainer.IMAGE);
 
     try (var container = new PostgreSQLContainer<>(imageName)) {
@@ -48,17 +50,38 @@ public class EntityGenerator {
               .withOutputSchemaToDefault(true)
               .withRecordVersionFields("version");
 
-      var target = new Target().withPackageName(packageName).withDirectory(folderPath);
-      var generatorStrategy = new Strategy();
       var generate =
-          new Generate().withComments(true).withJavaTimeTypes(true).withFluentSetters(true);
+          new Generate()
+              .withComments(true)
+              .withJavaTimeTypes(true)
+              .withFluentSetters(true)
+              .withJavaBeansGettersAndSetters(false)
+              .withGeneratedAnnotation(true)
+              .withGeneratedAnnotationDate(true)
+              .withGeneratedAnnotationJooqVersion(true)
+              .withNullableAnnotation(true)
+              .withNullableAnnotationType("jakarta.annotation.Nullable")
+              .withNonnullAnnotation(true)
+              .withNonnullAnnotationType("jakarta.annotation.Nonnull")
+              .withPojos(true)
+              .withImmutablePojos(true)
+              .withPojosEqualsAndHashCode(true)
+              .withPojosAsJavaRecordClasses(true)
+              .withPojosToString(true)
+              .withDaos(true)
+              .withGlobalObjectNames(true)
+              .withIndentation("  ")
+              .withUdts(true)
+              .withUdtPaths(true)
+              .withGlobalUDTReferences(true)
+              .withCommentsOnUDTs(true);
 
       var generator =
           new Generator()
               .withDatabase(database)
-              .withTarget(target)
+              .withTarget(new Target().withPackageName(packageName).withDirectory(folderPath))
               .withGenerate(generate)
-              .withStrategy(generatorStrategy);
+              .withStrategy(new Strategy());
 
       var jdbc =
           new Jdbc()
@@ -67,7 +90,12 @@ public class EntityGenerator {
               .withUser("test")
               .withPassword("test");
 
-      var configuration = new Configuration().withJdbc(jdbc).withGenerator(generator);
+      var configuration =
+          new Configuration()
+              .withJdbc(jdbc)
+              .withGenerator(generator)
+              .withOnError(OnError.FAIL)
+              .withLogging(Logging.DEBUG);
 
       GenerationTool.generate(configuration);
     }

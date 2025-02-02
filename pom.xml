@@ -20,6 +20,16 @@
     <module>commons</module>
     <module>db-migration</module>
     <module>entity-generator</module>
+    <module>transaction</module>
+    <module>annotation</module>
+    <module>config</module>
+    <module>web</module>
+    <module>logging</module>
+    <module>launcher</module>
+    <module>jooq</module>
+    <module>saga</module>
+    <module>security</module>
+    <module>bom</module>
   </modules>
 
   <distributionManagement>
@@ -33,15 +43,17 @@
   <properties>
     <!--deps-->
     <vertx-dagger-codegen.version>1.52.0</vertx-dagger-codegen.version>
-    <tx-manager.version>1.58.0</tx-manager.version>
+    <tx-manager.version>1.59.0</tx-manager.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>github.benslabbert.txmanager</groupId>
-        <artifactId>txmanager</artifactId>
+        <artifactId>bom</artifactId>
         <version>${tx-manager.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>github.benslabbert.vertx-dagger-codegen</groupId>

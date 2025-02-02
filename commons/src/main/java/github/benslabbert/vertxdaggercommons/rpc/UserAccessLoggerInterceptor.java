@@ -38,7 +38,7 @@ public class UserAccessLoggerInterceptor implements ServiceInterceptor {
 
     String action = message.headers().get("action");
 
-    log.info(user.subject() + ": executing action: " + action);
+    log.info("{} : executing action: {}", user.subject(), action);
     return vertxContext.succeededFuture(message);
   }
 }

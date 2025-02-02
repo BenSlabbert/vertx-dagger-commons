@@ -8,7 +8,7 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>commons</artifactId>
+  <artifactId>saga</artifactId>
 
   <dependencies>
     <dependency>
@@ -21,15 +21,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
-      <artifactId>commons</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>github.benslabbert.vertx-dagger-commons</groupId>
-      <artifactId>config</artifactId>
-      <version>${revision}</version>
-    </dependency>
-    <dependency>
       <groupId>github.benslabbert.vertx-dagger-commons</groupId>
       <artifactId>logging</artifactId>
       <version>${revision}</version>
@@ -39,8 +30,14 @@
       <artifactId>vertx-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-service-proxy</artifactId>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
@@ -70,6 +67,11 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -120,25 +122,6 @@
               <version>${dagger.version}</version>
             </path>
           </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <forkCount>1C</forkCount>
-          <reuseForks>true</reuseForks>
         </configuration>
       </plugin>
     </plugins>

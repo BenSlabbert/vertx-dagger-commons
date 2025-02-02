@@ -12,16 +12,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
+      <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+      <artifactId>db-migration</artifactId>
+      <version>${revision}</version>
     </dependency>
     <dependency>
       <groupId>github.benslabbert.vertx-dagger-commons</groupId>
-      <artifactId>db-migration</artifactId>
+      <artifactId>logging</artifactId>
       <version>${revision}</version>
     </dependency>
     <dependency>

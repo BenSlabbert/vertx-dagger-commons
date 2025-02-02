@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+    <artifactId>commons-parent</artifactId>
+    <version>${revision}</version>
+  </parent>
+
+  <artifactId>web</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+      <artifactId>config</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+      <artifactId>logging</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-json-schema</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

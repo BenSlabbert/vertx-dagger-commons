@@ -55,6 +55,11 @@
       </dependency>
       <dependency>
         <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+        <artifactId>redis</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-commons</groupId>
         <artifactId>saga</artifactId>
         <version>${revision}</version>
       </dependency>

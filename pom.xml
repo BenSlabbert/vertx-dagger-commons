@@ -30,6 +30,7 @@
     <module>saga</module>
     <module>security</module>
     <module>bom</module>
+    <module>redis</module>
   </modules>
 
   <distributionManagement>

@@ -25,6 +25,11 @@
       </dependency>
       <dependency>
         <groupId>github.benslabbert.vertx-dagger-commons</groupId>
+        <artifactId>commons-test</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-commons</groupId>
         <artifactId>config</artifactId>
         <version>${revision}</version>
       </dependency>
@@ -77,22 +82,6 @@
         <groupId>github.benslabbert.vertx-dagger-commons</groupId>
         <artifactId>web</artifactId>
         <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>github.benslabbert.vertx-dagger-commons</groupId>
-        <artifactId>commons</artifactId>
-        <version>${revision}</version>
-        <classifier>tests</classifier>
-        <type>test-jar</type>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>github.benslabbert.vertx-dagger-commons</groupId>
-        <artifactId>config</artifactId>
-        <version>${revision}</version>
-        <classifier>tests</classifier>
-        <type>test-jar</type>
-        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

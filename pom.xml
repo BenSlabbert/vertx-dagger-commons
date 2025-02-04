@@ -31,6 +31,7 @@
     <module>security</module>
     <module>bom</module>
     <module>redis</module>
+    <module>commons-test</module>
   </modules>
 
   <distributionManagement>
@@ -58,18 +59,10 @@
       </dependency>
       <dependency>
         <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
-        <artifactId>annotation</artifactId>
+        <artifactId>bom</artifactId>
         <version>${vertx-dagger-codegen.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
-        <artifactId>commons</artifactId>
-        <version>${vertx-dagger-codegen.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>github.benslabbert.vertx-dagger-codegen</groupId>
-        <artifactId>processor</artifactId>
-        <version>${vertx-dagger-codegen.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

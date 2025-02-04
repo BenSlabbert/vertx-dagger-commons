@@ -1,5 +1,5 @@
 /* Licensed under Apache-2.0 2024. */
-package github.benslabbert.vertxdaggercommons.docker;
+package github.benslabbert.vertxdaggercommons.test;
 
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;

@@ -45,7 +45,7 @@
   <properties>
     <!--deps-->
     <vertx-dagger-codegen.version>1.53.0</vertx-dagger-codegen.version>
-    <tx-manager.version>1.81.0</tx-manager.version>
+    <tx-manager.version>1.95.0</tx-manager.version>
   </properties>
 
   <dependencyManagement>

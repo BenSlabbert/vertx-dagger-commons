@@ -3,14 +3,12 @@ package github.benslabbert.vertxdaggercommons.security.rpc;
 
 import com.google.common.collect.ImmutableSet;
 import github.benslabbert.vertxdaggercodegen.commons.security.rpc.SecuredAction;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.eventbus.ReplyFailure;
-import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.internal.ContextInternal;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.authorization.Authorization;
@@ -76,7 +74,7 @@ public class RpcServiceProxySecurityInterceptor implements ServiceInterceptor {
     }
 
     @Override
-    public void getAuthorizations(User user, Handler<AsyncResult<Void>> handler) {
+    public Future<Void> getAuthorizations(User user) {
       JsonObject accessToken = user.attributes().getJsonObject("accessToken");
       ACL acl = ACL.fromJson(accessToken.getJsonObject("acl"));
       String group = acl.group();
@@ -88,8 +86,8 @@ public class RpcServiceProxySecurityInterceptor implements ServiceInterceptor {
       builder.add(RoleBasedAuthorization.create(role));
       permissions.forEach(p -> builder.add(PermissionBasedAuthorization.create(p)));
 
-      user.authorizations().add(getId(), builder.build());
-      Future.<Void>succeededFuture().onComplete(handler);
+      user.authorizations().put(getId(), builder.build());
+      return Future.succeededFuture();
     }
   }
 }

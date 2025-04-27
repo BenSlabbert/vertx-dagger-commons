@@ -40,8 +40,7 @@ jobs:
       with:
         maven-version: "3.9.9"
     - run: "git fetch --prune --unshallow --tags"
-    - run: "make 'M=mvn -s settings.xml -T 1C' fmtCheck"
-    - run: "make 'M=mvn -s settings.xml -T 1C' build"
+    - run: "mvn -s settings.xml clean spotless:check install -T 1C"
     - name: "Perform CodeQL Analysis"
       uses: "github/codeql-action/analyze@v3"
     - name: "Submit Dependency Snapshot"

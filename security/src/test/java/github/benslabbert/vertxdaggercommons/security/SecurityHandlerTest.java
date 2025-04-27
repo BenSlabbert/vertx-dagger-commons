@@ -22,7 +22,7 @@ class SecurityHandlerTest {
     JsonObject principal = new JsonObject().put("id", "test");
     JsonObject attributes = new JsonObject().put("attribute", "value");
     User user = User.create(principal, attributes);
-    user.authorizations().add("role-provider-id", RoleBasedAuthorization.create("my-role"));
+    user.authorizations().put("role-provider-id", RoleBasedAuthorization.create("my-role"));
 
     Object id = user.get("id");
     assertThat(id).isNotNull();
@@ -41,7 +41,7 @@ class SecurityHandlerTest {
     JsonObject principal = new JsonObject().put("id", "test");
     JsonObject attributes = new JsonObject().put("attribute", "value");
     User user = User.create(principal, attributes);
-    user.authorizations().add("role-provider-id", RoleBasedAuthorization.create("my-role"));
+    user.authorizations().put("role-provider-id", RoleBasedAuthorization.create("my-role"));
 
     Object id = user.get("id");
     assertThat(id).isNotNull();

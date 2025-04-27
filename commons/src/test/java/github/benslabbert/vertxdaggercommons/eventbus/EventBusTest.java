@@ -3,7 +3,6 @@ package github.benslabbert.vertxdaggercommons.eventbus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
@@ -36,40 +35,39 @@ class EventBusTest {
           // do not reply
         });
 
-    eventBus.request(
-        "test",
-        "request",
-        new DeliveryOptions().setSendTimeout(100L),
-        (AsyncResult<Message<String>> ar) ->
-            testContext.verify(
-                () -> {
-                  assertThat(ar.failed()).isTrue();
-                  Throwable err = ar.cause();
-                  assertThat(err).isInstanceOf(ReplyException.class);
-                  ReplyException ex = (ReplyException) err;
-                  assertThat(ex.failureType()).isEqualTo(ReplyFailure.TIMEOUT);
-                  assertThat(ex.failureCode()).isEqualTo(-1);
-                  testContext.completeNow();
-                }));
+    eventBus
+        .request("test", "request", new DeliveryOptions().setSendTimeout(100L))
+        .onComplete(
+            ar ->
+                testContext.verify(
+                    () -> {
+                      assertThat(ar.failed()).isTrue();
+                      Throwable err = ar.cause();
+                      assertThat(err).isInstanceOf(ReplyException.class);
+                      ReplyException ex = (ReplyException) err;
+                      assertThat(ex.failureType()).isEqualTo(ReplyFailure.TIMEOUT);
+                      assertThat(ex.failureCode()).isEqualTo(-1);
+                      testContext.completeNow();
+                    }));
   }
 
   @Test
   void testReplyFailures_noHandlers(Vertx vertx, VertxTestContext testContext) {
     EventBus eventBus = vertx.eventBus();
 
-    eventBus.request(
-        "test",
-        "request",
-        (AsyncResult<Message<String>> ar) ->
-            testContext.verify(
-                () -> {
-                  Throwable err = ar.cause();
-                  assertThat(err).isInstanceOf(ReplyException.class);
-                  ReplyException ex = (ReplyException) err;
-                  assertThat(ex.failureType()).isEqualTo(ReplyFailure.NO_HANDLERS);
-                  assertThat(ex.failureCode()).isEqualTo(-1);
-                  testContext.completeNow();
-                }));
+    eventBus
+        .request("test", "request")
+        .onComplete(
+            ar ->
+                testContext.verify(
+                    () -> {
+                      Throwable err = ar.cause();
+                      assertThat(err).isInstanceOf(ReplyException.class);
+                      ReplyException ex = (ReplyException) err;
+                      assertThat(ex.failureType()).isEqualTo(ReplyFailure.NO_HANDLERS);
+                      assertThat(ex.failureCode()).isEqualTo(-1);
+                      testContext.completeNow();
+                    }));
   }
 
   @Test
@@ -78,21 +76,21 @@ class EventBusTest {
 
     eventBus.consumer("test", (Message<String> msg) -> msg.fail(100, "deliberate failure"));
 
-    eventBus.request(
-        "test",
-        "request",
-        (AsyncResult<Message<String>> ar) ->
-            testContext.verify(
-                () -> {
-                  Throwable err = ar.cause();
-                  assertThat(err).isInstanceOf(ReplyException.class);
-                  ReplyException ex = (ReplyException) err;
+    eventBus
+        .request("test", "request")
+        .onComplete(
+            ar ->
+                testContext.verify(
+                    () -> {
+                      Throwable err = ar.cause();
+                      assertThat(err).isInstanceOf(ReplyException.class);
+                      ReplyException ex = (ReplyException) err;
 
-                  assertThat(ex.failureType()).isEqualTo(ReplyFailure.RECIPIENT_FAILURE);
-                  assertThat(ex.failureCode()).isEqualTo(100);
-                  assertThat(ex.getMessage()).isEqualTo("deliberate failure");
-                  testContext.completeNow();
-                }));
+                      assertThat(ex.failureType()).isEqualTo(ReplyFailure.RECIPIENT_FAILURE);
+                      assertThat(ex.failureCode()).isEqualTo(100);
+                      assertThat(ex.getMessage()).isEqualTo("deliberate failure");
+                      testContext.completeNow();
+                    }));
   }
 
   @Test
@@ -108,25 +106,21 @@ class EventBusTest {
               messageReceivedByConsumer.flag();
             });
 
-    consumer.completionHandler(
-        ar -> System.err.println("registration completed, success ? " + ar.succeeded()));
-
     // called when the ReadStream is closed
     consumer.endHandler(ignore -> System.err.println("stream ended"));
 
     eventBus
         .send("test", "send")
         .publish("test", "publish")
-        .request(
-            "test",
-            "request",
-            (AsyncResult<Message<String>> ar) ->
+        .request("test", "request")
+        .onComplete(
+            ar ->
                 testContext.verify(
                     () -> {
                       assertThat(ar.cause()).isNull();
                       assertThat(ar.failed()).isFalse();
                       assertThat(ar.succeeded()).isTrue();
-                      Message<String> result = ar.result();
+                      Message<Object> result = ar.result();
                       assertThat(result.body()).isEqualTo("reply");
                       assertThat(result.headers().contains("key", "value", false)).isTrue();
                       testContext.completeNow();

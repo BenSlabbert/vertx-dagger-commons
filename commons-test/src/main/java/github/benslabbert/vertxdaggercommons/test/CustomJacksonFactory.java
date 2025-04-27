@@ -20,7 +20,6 @@ public class CustomJacksonFactory implements JsonFactory {
   public JsonCodec codec() {
     DatabindCodec databindCodec = new DatabindCodec();
     DatabindCodec.mapper().registerModule(new JavaTimeModule());
-    DatabindCodec.prettyMapper().registerModule(new JavaTimeModule());
     return databindCodec;
   }
 

@@ -45,7 +45,7 @@ class SimpleTransactionProviderTest {
   private static final ExecutorService EXECUTOR_SERVICE =
       Executors.newThreadPerTaskExecutor(THREAD_FACTORY);
 
-  // do not use FuturUtil as the executor is shutdown during tests
+  // do not use FutureUtil as the executor is shutdown during tests
   private static Future<Void> run(Runnable runnable) {
     CompletableFuture<Void> completableFuture =
         CompletableFuture.runAsync(runnable, EXECUTOR_SERVICE);

@@ -10,9 +10,13 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.apache.commons.dbutils.DbUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class JdbcUtils {
+
+  private static final Logger log = LoggerFactory.getLogger(JdbcUtils.class);
 
   private final JdbcTransactionManager jdbcTransactionManager;
 
@@ -85,13 +89,16 @@ public class JdbcUtils {
               () -> {
                 try {
                   if (rs.isClosed()) {
+                    log.debug("stream: result set is closed, returning null");
                     return null;
                   }
 
                   if (rs.next()) {
+                    log.debug("stream: next element in result set");
                     return mapper.apply(rs);
                   }
 
+                  log.debug("stream: no more elements in result set");
                   return null;
                 } catch (Exception e) {
                   throw new QueryException(e);
@@ -100,8 +107,8 @@ public class JdbcUtils {
           .takeWhile(Objects::nonNull)
           .onClose(wrapper::close);
     } catch (Exception e) {
+      log.atDebug().setMessage("stream: exception while streaming results").setCause(e).log();
       wrapper.close();
-      jdbcTransactionManager.rollback();
       throw new QueryException(e);
     }
   }
@@ -112,7 +119,6 @@ public class JdbcUtils {
       Connection conn = jdbcTransactionManager.getConnection();
       return function.apply(conn);
     } catch (Exception e) {
-      jdbcTransactionManager.rollback();
       throw new QueryException(e);
     }
   }

@@ -9,12 +9,13 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.apache.commons.dbutils.AbstractQueryRunner;
 import org.apache.commons.dbutils.DbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class JdbcUtils {
+public class JdbcUtils extends AbstractQueryRunner {
 
   private static final Logger log = LoggerFactory.getLogger(JdbcUtils.class);
 
@@ -22,6 +23,8 @@ public class JdbcUtils {
 
   @Inject
   JdbcUtils(JdbcTransactionManager jdbcTransactionManager) {
+    // we want an empty super constructor on purpose
+    super();
     this.jdbcTransactionManager = jdbcTransactionManager;
   }
 
@@ -64,10 +67,11 @@ public class JdbcUtils {
   }
 
   /** Stream the results of a query in a dedicated transaction. */
-  public <T> Stream<T> streamInTransaction(String sql, ResultSetMapper<T> mapper) {
+  public <T> Stream<T> streamInTransaction(
+      String sql, ResultSetMapper<T> mapper, Object... params) {
     try {
       jdbcTransactionManager.begin();
-      return stream(sql, mapper).onClose(jdbcTransactionManager::commit);
+      return stream(sql, mapper, params).onClose(jdbcTransactionManager::commit);
     } catch (Exception e) {
       jdbcTransactionManager.rollback();
       throw new QueryException(e);
@@ -75,16 +79,15 @@ public class JdbcUtils {
   }
 
   /** Stream the results of a query in an existing transaction. */
-  public <T> Stream<T> stream(String sql, ResultSetMapper<T> mapper) {
+  public <T> Stream<T> stream(String sql, ResultSetMapper<T> mapper, Object... params) {
     Wrapper wrapper = new Wrapper();
     try {
       Connection connection = jdbcTransactionManager.getConnection();
-      PreparedStatement statement = connection.prepareStatement(sql);
+      PreparedStatement statement = prepareStatement(connection, sql);
+      fillStatement(statement, params);
       wrapper.wrap(statement);
-
       ResultSet rs = statement.executeQuery();
       wrapper.wrap(rs);
-
       return Stream.generate(
               () -> {
                 try {

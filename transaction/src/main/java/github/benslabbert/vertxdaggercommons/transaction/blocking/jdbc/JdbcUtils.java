@@ -1,30 +1,31 @@
 /* Licensed under Apache-2.0 2024. */
 package github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc;
 
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.stream.Stream;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.apache.commons.dbutils.AbstractQueryRunner;
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.StatementConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Singleton
 public class JdbcUtils extends AbstractQueryRunner {
 
   private static final Logger log = LoggerFactory.getLogger(JdbcUtils.class);
 
   private final JdbcTransactionManager jdbcTransactionManager;
 
-  @Inject
-  JdbcUtils(JdbcTransactionManager jdbcTransactionManager) {
-    // we want an empty super constructor on purpose
-    super();
+  @AssistedInject
+  JdbcUtils(
+      JdbcTransactionManager jdbcTransactionManager,
+      @Assisted StatementConfiguration statementConfiguration) {
+    super(statementConfiguration);
     this.jdbcTransactionManager = jdbcTransactionManager;
   }
 

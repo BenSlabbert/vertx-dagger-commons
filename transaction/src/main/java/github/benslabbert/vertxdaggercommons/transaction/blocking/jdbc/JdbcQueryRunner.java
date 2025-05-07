@@ -1,23 +1,23 @@
 /* Licensed under Apache-2.0 2024. */
 package github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc;
 
-import java.time.Duration;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
 import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.StatementConfiguration;
 
-@Singleton
 public class JdbcQueryRunner {
 
   private final JdbcTransactionManager jdbcTransactionManager;
   private final QueryRunner queryRunner;
 
-  @Inject
-  JdbcQueryRunner(JdbcTransactionManager jdbcTransactionManager) {
-    this.queryRunner = new QueryRunner();
+  @AssistedInject
+  JdbcQueryRunner(
+      JdbcTransactionManager jdbcTransactionManager,
+      @Assisted StatementConfiguration statementConfiguration) {
+    this.queryRunner = new QueryRunner(statementConfiguration);
     this.jdbcTransactionManager = jdbcTransactionManager;
   }
 
@@ -46,15 +46,6 @@ public class JdbcQueryRunner {
   }
 
   public <T> List<T> execute(String sql, ResultSetHandler<T> rsh, Object... params) {
-    StatementConfiguration statementConfiguration =
-        new StatementConfiguration.Builder()
-            .fetchSize(1)
-            .queryTimeout(Duration.ofSeconds(5L))
-            .fetchDirection(1)
-            .maxFieldSize(1)
-            .maxRows(1)
-            .build();
-    new QueryRunner(statementConfiguration);
     try {
       return queryRunner.execute(jdbcTransactionManager.getConnection(), sql, rsh, params);
     } catch (Exception e) {

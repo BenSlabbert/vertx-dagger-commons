@@ -21,6 +21,11 @@ registries:
     url: "https://maven.pkg.github.com/BenSlabbert/tx-manager"
     username: "BenSlabbert"
     password: "${{ secrets.GH_TOKEN }}"
+  compile-testing:
+    type: "maven-repository"
+    url: "https://maven.pkg.github.com/BenSlabbert/compile-testing"
+    username: "BenSlabbert"
+    password: "${{ secrets.GH_TOKEN }}"
 updates:
 - package-ecosystem: "maven"
   directory: "/"
@@ -32,6 +37,7 @@ updates:
   - "git-version-extension"
   - "vertx-dagger-codegen"
   - "tx-manager"
+  - "compile-testing"
   labels:
   - "dependencies"
   - "automerge"

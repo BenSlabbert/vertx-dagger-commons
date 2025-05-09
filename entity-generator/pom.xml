@@ -12,6 +12,10 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
       <groupId>github.benslabbert.vertx-dagger-commons</groupId>
       <artifactId>db-migration</artifactId>
       <version>${revision}</version>

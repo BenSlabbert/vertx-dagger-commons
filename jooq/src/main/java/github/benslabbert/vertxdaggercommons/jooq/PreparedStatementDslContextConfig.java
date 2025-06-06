@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.conf.ParamType;
 import org.jooq.conf.Settings;
 import org.jooq.conf.StatementType;
 import org.jooq.impl.DSL;
@@ -20,7 +21,11 @@ final class PreparedStatementDslContextConfig {
   @Singleton
   @Named("prepared")
   static DSLContext dslContext() {
-    Settings settings = new Settings().withStatementType(StatementType.PREPARED_STATEMENT);
+    // settings for jdbc
+    Settings settings =
+        new Settings()
+            .withParamType(ParamType.INDEXED)
+            .withStatementType(StatementType.PREPARED_STATEMENT);
     return DSL.using(SQLDialect.POSTGRES, settings);
   }
 }

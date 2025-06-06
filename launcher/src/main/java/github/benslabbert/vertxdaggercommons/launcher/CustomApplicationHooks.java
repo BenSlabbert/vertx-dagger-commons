@@ -55,6 +55,9 @@ public class CustomApplicationHooks implements VertxApplicationHooks {
 
   @Override
   public JsonObject afterConfigParsed(JsonObject config) {
+    if (null == config) {
+      config = new JsonObject();
+    }
 
     if (!config.isEmpty()) return config;
 

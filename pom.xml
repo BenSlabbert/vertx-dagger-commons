@@ -5,7 +5,7 @@
   <parent>
     <groupId>github.benslabbert</groupId>
     <artifactId>vertx-dagger-bom</artifactId>
-    <version>3.35.0</version>
+    <version>3.40.0</version>
   </parent>
 
   <groupId>github.benslabbert.vertx-dagger-commons</groupId>

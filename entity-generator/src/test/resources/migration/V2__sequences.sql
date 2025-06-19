@@ -1,1 +1,2 @@
-create sequence test_seq start 1 increment 1;
+CREATE
+  SEQUENCE test_seq START 1 INCREMENT 1;

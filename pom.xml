@@ -44,7 +44,7 @@
 
   <properties>
     <!--deps-->
-    <vertx-dagger-codegen.version>2.37.0</vertx-dagger-codegen.version>
+    <vertx-dagger-codegen.version>2.38.0</vertx-dagger-codegen.version>
     <tx-manager.version>1.133.0</tx-manager.version>
     <compile-testing.version>1.2.0</compile-testing.version>
   </properties>

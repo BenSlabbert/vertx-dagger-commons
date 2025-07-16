@@ -47,6 +47,9 @@
     <vertx-dagger-codegen.version>2.46.0</vertx-dagger-codegen.version>
     <tx-manager.version>1.142.0</tx-manager.version>
     <compile-testing.version>1.2.0</compile-testing.version>
+
+    <!--plugins-->
+    <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
   </properties>
 
   <dependencyManagement>

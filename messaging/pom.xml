@@ -8,7 +8,7 @@
   </parent>
 
   <groupId>github.benslabbert.vertx-dagger-commons.messaging</groupId>
-  <artifactId>messaging-parent</artifactId>
+  <artifactId>messaging</artifactId>
   <packaging>pom</packaging>
   <modules>
     <module>outbox</module>

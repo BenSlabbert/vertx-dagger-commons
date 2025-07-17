@@ -40,7 +40,7 @@ import org.mockito.Mockito;
 import org.testcontainers.containers.GenericContainer;
 
 @ExtendWith(VertxExtension.class)
-class SimpleTransactionProviderTest {
+class SimpleTransactionProviderIT {
 
   private static final ExecutorService EXECUTOR_SERVICE =
       Executors.newThreadPerTaskExecutor(THREAD_FACTORY);

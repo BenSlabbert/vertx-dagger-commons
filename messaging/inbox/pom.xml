@@ -7,7 +7,7 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>outbox</artifactId>
+  <artifactId>inbox</artifactId>
 
   <dependencies>
     <dependency>

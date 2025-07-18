@@ -12,6 +12,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>outbox</module>
+    <module>inbox</module>
+    <module>messaging-commons</module>
   </modules>
 
 </project>

@@ -14,10 +14,7 @@ import github.benslabbert.vertxdaggercommons.test.DockerContainers;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcQueryRunner;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcTransactionManager;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcTransactionManager_Factory;
-import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.http.impl.headers.HeadersMultiMap;
 import io.vertx.core.json.JsonObject;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
@@ -31,10 +28,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 
 @ExtendWith(VertxExtension.class)
-class OutboxIT {
+class InboxIT {
+
+  private static final Logger log = LoggerFactory.getLogger(InboxIT.class);
 
   protected static final GenericContainer<?> postgres = DockerContainers.POSTGRES;
 
@@ -70,7 +71,7 @@ class OutboxIT {
     try (var conn = dataSource.getConnection()) {
       Statement statement = conn.createStatement();
       statement.execute(
-          "create table outbox(id serial8 primary key, address text, headers text, body text)");
+          "create table inbox(id serial8 primary key, address text, headers text, body text)");
       conn.commit();
     } catch (Exception e) {
       fail("should create table successfully", e);
@@ -100,55 +101,56 @@ class OutboxIT {
   void send(Vertx vertx, VertxTestContext testContext) {
     Checkpoint checkpoint = testContext.checkpoint(2);
 
-    vertx
-        .eventBus()
-        .consumer(
-            "addr",
-            (Message<JsonObject> msg) -> {
-              MultiMap headers = msg.headers();
-              JsonObject body = msg.body();
-              assertThat(body).isNotNull();
-              assertThat(body.getString("address")).isEqualTo("test");
-              assertThat(headers.get("key")).isEqualTo("value");
-              checkpoint.flag();
-            });
+    try (var conn = dataSource.getConnection()) {
+      Statement statement = conn.createStatement();
+      statement.execute("insert into inbox(address, headers, body) values ('address', '{}', '{}')");
+      conn.commit();
+    } catch (Exception e) {
+      fail("should insert into table successfully", e);
+    }
 
     PlatformTransactionManager.begin();
-
-    Outbox outbox = provider.outbox();
-
-    outbox.afterCreated();
-    MultiMap headers = HeadersMultiMap.httpHeaders().add("key", "value");
-    outbox.send("addr", headers, new JsonObject().put("address", "test"));
-
-    JdbcQueryRunner jdbcQueryRunner = provider.jdbcQueryRunnerFactory().create();
-
-    assertThat(getOutboxRows(jdbcQueryRunner))
-        .singleElement()
-        .satisfies(
-            r -> {
-              assertThat(r.id()).isPositive();
-              assertThat(r.address()).isEqualTo("addr");
-              assertThat(r.headers()).isEqualTo("{\"key\":[\"value\"]}");
-              assertThat(r.body()).isEqualTo("{\"address\":\"test\"}");
-            });
-
+    List<Row> inboxRows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
+    assertThat(inboxRows).hasSize(1);
     PlatformTransactionManager.commit();
 
+    provider.myInbox();
+    PlatformTransactionManager.begin();
+    inboxRows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
+    PlatformTransactionManager.commit();
+    assertThat(inboxRows).isEmpty();
+
+    vertx.eventBus().publish("address", new JsonObject());
+
     await()
-        .atMost(Duration.ofSeconds(5))
+        .atMost(Duration.ofSeconds(1))
         .untilAsserted(
             () -> {
               PlatformTransactionManager.begin();
-              assertThat(getOutboxRows(jdbcQueryRunner)).isEmpty();
+              var rows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
+              log.info("before delay {}", rows);
+              assertThat(rows).hasSize(1);
+              PlatformTransactionManager.commit();
+              checkpoint.flag();
+            });
+
+    await()
+        .pollDelay(Duration.ofSeconds(2))
+        .atMost(Duration.ofSeconds(4))
+        .untilAsserted(
+            () -> {
+              PlatformTransactionManager.begin();
+              var rows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
+              log.info("after delay {}", rows);
+              assertThat(rows).isEmpty();
               PlatformTransactionManager.commit();
               checkpoint.flag();
             });
   }
 
-  private static List<Row> getOutboxRows(JdbcQueryRunner jdbcQueryRunner) {
+  private static List<Row> getInboxRows(JdbcQueryRunner jdbcQueryRunner) {
     return jdbcQueryRunner.query(
-        "select * from outbox",
+        "select * from inbox",
         rs -> {
           List<Row> objects = new ArrayList<>();
           while (rs.next()) {

@@ -1,9 +1,9 @@
 /* Licensed under Apache-2.0 2024. */
 package github.benslabbert.vertxdaggercommons.transaction.blocking.scope;
 
-import io.vertx.core.impl.NoStackTraceException;
+import io.vertx.core.VertxException;
+import jakarta.inject.Inject;
 import java.sql.Connection;
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 @TransactionScope
@@ -33,7 +33,7 @@ public class TransactionManager implements AutoCloseable {
       connection = dataSource.getConnection();
       connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
     } catch (Exception e) {
-      throw new NoStackTraceException(e);
+      throw VertxException.noStackTrace(e);
     }
   }
 
@@ -46,7 +46,7 @@ public class TransactionManager implements AutoCloseable {
       connection.commit();
       commitCalled = true;
     } catch (Exception e) {
-      throw new NoStackTraceException(e);
+      throw VertxException.noStackTrace(e);
     }
   }
 
@@ -69,7 +69,7 @@ public class TransactionManager implements AutoCloseable {
       connection.close();
       reset();
     } catch (Exception e) {
-      throw new NoStackTraceException(e);
+      throw VertxException.noStackTrace(e);
     }
   }
 
@@ -85,7 +85,7 @@ public class TransactionManager implements AutoCloseable {
     try {
       connection.rollback();
     } catch (Exception e) {
-      throw new NoStackTraceException(e);
+      throw VertxException.noStackTrace(e);
     }
   }
 

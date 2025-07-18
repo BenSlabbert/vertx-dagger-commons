@@ -4,7 +4,7 @@ package github.benslabbert.vertxdaggercommons.future;
 import github.benslabbert.vertxdaggercommons.thread.VirtualThreadFactory;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
-import io.vertx.core.impl.NoStackTraceException;
+import io.vertx.core.VertxException;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -61,7 +61,7 @@ public final class FutureUtil {
       return EXECUTOR.awaitTermination(10L, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new NoStackTraceException(e);
+      throw VertxException.noStackTrace(e);
     }
   }
 
@@ -77,7 +77,7 @@ public final class FutureUtil {
                 promise.complete(ok);
               } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new NoStackTraceException(e);
+                throw VertxException.noStackTrace(e);
               }
             });
 

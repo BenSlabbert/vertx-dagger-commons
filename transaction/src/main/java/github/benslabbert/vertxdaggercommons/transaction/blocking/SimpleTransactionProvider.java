@@ -3,7 +3,7 @@ package github.benslabbert.vertxdaggercommons.transaction.blocking;
 
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.sql.DataSource;
 
 @Module

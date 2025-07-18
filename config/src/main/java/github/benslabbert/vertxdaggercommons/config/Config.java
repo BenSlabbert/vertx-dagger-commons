@@ -3,8 +3,8 @@ package github.benslabbert.vertxdaggercommons.config;
 
 import com.google.auto.value.AutoBuilder;
 import io.vertx.core.json.JsonObject;
+import jakarta.annotation.Nullable;
 import java.time.Duration;
-import javax.annotation.Nullable;
 
 public record Config(
     Profile profile,

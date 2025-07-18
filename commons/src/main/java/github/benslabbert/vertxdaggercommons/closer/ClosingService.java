@@ -1,9 +1,9 @@
 /* Licensed under Apache-2.0 2024. */
 package github.benslabbert.vertxdaggercommons.closer;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class ClosingService {

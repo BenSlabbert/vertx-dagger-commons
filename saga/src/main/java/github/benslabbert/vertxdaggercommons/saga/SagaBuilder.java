@@ -2,12 +2,12 @@
 package github.benslabbert.vertxdaggercommons.saga;
 
 import io.vertx.core.Vertx;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class SagaBuilder {

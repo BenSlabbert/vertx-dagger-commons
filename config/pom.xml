@@ -25,6 +25,10 @@
       <artifactId>vertx-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
       <scope>provided</scope>

@@ -3,7 +3,7 @@ package github.benslabbert.vertxdaggercommons.jooq;
 
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import javax.sql.DataSource;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;

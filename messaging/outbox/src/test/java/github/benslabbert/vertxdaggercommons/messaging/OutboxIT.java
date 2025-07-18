@@ -12,14 +12,8 @@ import github.benslabbert.txmanager.PlatformTransactionManager;
 import github.benslabbert.vertxdaggercommons.config.Config;
 import github.benslabbert.vertxdaggercommons.test.DockerContainers;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcQueryRunner;
-import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcQueryRunnerFactory;
-import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcQueryRunnerFactory_Impl;
-import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcQueryRunner_Factory;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcTransactionManager;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcTransactionManager_Factory;
-import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcUtilsFactory;
-import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcUtilsFactory_Impl;
-import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcUtils_Factory;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.Message;
@@ -33,7 +27,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import javax.inject.Provider;
 import org.apache.commons.dbutils.StatementConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,9 +53,10 @@ class OutboxIT {
 
   private JdbcTransactionManager jdbcTransactionManager;
   private HikariDataSource dataSource;
+  private Provider provider;
 
   @BeforeEach
-  void before() {
+  void before(Vertx vertx) {
     Config.PostgresConfig psqlCfg =
         Config.PostgresConfig.builder()
             .host("127.0.0.1")
@@ -86,6 +80,12 @@ class OutboxIT {
 
     jdbcTransactionManager = JdbcTransactionManager_Factory.newInstance(dataSource);
     PlatformTransactionManager.setTransactionManager(jdbcTransactionManager);
+
+    provider =
+        DaggerProvider.builder()
+            .vertx(vertx)
+            .jdbcTransactionManager(jdbcTransactionManager)
+            .build();
   }
 
   @AfterEach
@@ -100,12 +100,6 @@ class OutboxIT {
   @Test
   void send(Vertx vertx, VertxTestContext testContext) {
     Checkpoint checkpoint = testContext.checkpoint(2);
-
-    Provider<JdbcUtilsFactory> jdbcUtilsFactoryProvider =
-        JdbcUtilsFactory_Impl.create(JdbcUtils_Factory.create(() -> jdbcTransactionManager));
-    Provider<JdbcQueryRunnerFactory> jdbcQueryRunnerFactoryProvider =
-        JdbcQueryRunnerFactory_Impl.create(
-            JdbcQueryRunner_Factory.create(() -> jdbcTransactionManager));
 
     vertx
         .eventBus()
@@ -122,17 +116,14 @@ class OutboxIT {
 
     PlatformTransactionManager.begin();
 
-    Outbox outbox =
-        Outbox_Factory.newInstance(
-            vertx, jdbcUtilsFactoryProvider.get(), jdbcQueryRunnerFactoryProvider.get());
+    Outbox outbox = provider.outbox();
 
     outbox.afterCreated();
     MultiMap headers = HeadersMultiMap.httpHeaders().add("key", "value");
     outbox.send("addr", headers, new JsonObject().put("address", "test"));
 
-    JdbcQueryRunnerFactory jdbcQueryRunnerFactory = jdbcQueryRunnerFactoryProvider.get();
     JdbcQueryRunner jdbcQueryRunner =
-        jdbcQueryRunnerFactory.create(new StatementConfiguration.Builder().build());
+        provider.jdbcQueryRunnerFactory().create(new StatementConfiguration.Builder().build());
 
     assertThat(getOutboxRows(jdbcQueryRunner))
         .singleElement()

@@ -1,16 +1,16 @@
 /* Licensed under Apache-2.0 2025. */
-package github.benslabbert.vertxdaggercommons.messaging;
+package github.benslabbert.vertxdaggercommons.messaging.commons;
 
 import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import java.util.List;
 
-final class MultiMapConverter {
+public final class MultiMapConverter {
 
   private MultiMapConverter() {}
 
-  static MultiMap decodeHeaders(JsonObject json) {
+  public static MultiMap decodeHeaders(JsonObject json) {
     MultiMap map = MultiMap.caseInsensitiveMultiMap();
 
     for (String name : json.fieldNames()) {
@@ -22,7 +22,7 @@ final class MultiMapConverter {
     return map;
   }
 
-  static JsonObject encodeHeaders(MultiMap map) {
+  public static JsonObject encodeHeaders(MultiMap map) {
     JsonObject json = new JsonObject();
 
     for (String name : map.names()) {

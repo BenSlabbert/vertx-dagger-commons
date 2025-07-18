@@ -8,4 +8,8 @@ import org.apache.commons.dbutils.StatementConfiguration;
 public interface JdbcQueryRunnerFactory {
 
   JdbcQueryRunner create(StatementConfiguration statementConfiguration);
+
+  default JdbcQueryRunner create() {
+    return create(new StatementConfiguration.Builder().build());
+  }
 }

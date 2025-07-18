@@ -4,7 +4,7 @@ package github.benslabbert.vertxdaggercommons.saga;
 import dagger.BindsInstance;
 import dagger.Component;
 import io.vertx.core.Vertx;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @Component(modules = {SagaModule.class})

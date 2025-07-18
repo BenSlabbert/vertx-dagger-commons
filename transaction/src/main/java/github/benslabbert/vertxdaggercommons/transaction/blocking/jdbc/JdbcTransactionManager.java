@@ -3,12 +3,12 @@ package github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc;
 
 import github.benslabbert.txmanager.TransactionManager;
 import github.benslabbert.vertxdaggercommons.future.FutureUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.sql.Connection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 import org.apache.commons.dbutils.DbUtils;
 import org.slf4j.Logger;

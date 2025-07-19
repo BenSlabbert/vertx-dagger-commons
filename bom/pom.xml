@@ -83,6 +83,16 @@
         <artifactId>web</artifactId>
         <version>${revision}</version>
       </dependency>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-commons.messaging</groupId>
+        <artifactId>inbox</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>github.benslabbert.vertx-dagger-commons.messaging</groupId>
+        <artifactId>outbox</artifactId>
+        <version>${revision}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

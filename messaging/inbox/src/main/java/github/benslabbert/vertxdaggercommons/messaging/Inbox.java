@@ -9,6 +9,7 @@ import github.benslabbert.vertxdaggercommons.messaging.commons.MultiMapConverter
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcQueryRunnerFactory;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcUtils;
 import github.benslabbert.vertxdaggercommons.transaction.blocking.jdbc.JdbcUtilsFactory;
+import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -26,7 +27,7 @@ import org.apache.commons.dbutils.StatementConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Inbox {
+public abstract class Inbox implements Handler<Message<JsonObject>> {
 
   private static final Logger log = LoggerFactory.getLogger(Inbox.class);
 
@@ -52,8 +53,6 @@ public abstract class Inbox {
   }
 
   protected abstract String address();
-
-  protected abstract void handle(Message<JsonObject> msg);
 
   @Inject
   void listen() {

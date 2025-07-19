@@ -31,7 +31,7 @@ public class MyInbox extends Inbox {
   }
 
   @Override
-  protected void handle(Message<JsonObject> msg) {
+  public void handle(Message<JsonObject> msg) {
     log.info("handle message {}", msg.body());
     try {
       Thread.sleep(Duration.ofSeconds(2L));

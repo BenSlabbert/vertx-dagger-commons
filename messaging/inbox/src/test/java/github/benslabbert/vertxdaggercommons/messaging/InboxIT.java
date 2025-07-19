@@ -109,16 +109,23 @@ class InboxIT {
       fail("should insert into table successfully", e);
     }
 
-    PlatformTransactionManager.begin();
-    List<Row> inboxRows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
-    assertThat(inboxRows).hasSize(1);
-    PlatformTransactionManager.commit();
+    provider
+        .transactionManager()
+        .executeWithoutResult(
+            () -> {
+              List<Row> inboxRows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
+              assertThat(inboxRows).hasSize(1);
+            });
 
     provider.myInbox();
-    PlatformTransactionManager.begin();
-    inboxRows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
-    PlatformTransactionManager.commit();
-    assertThat(inboxRows).isEmpty();
+
+    provider
+        .transactionManager()
+        .executeWithoutResult(
+            () -> {
+              List<Row> inboxRows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
+              assertThat(inboxRows).isEmpty();
+            });
 
     vertx.eventBus().publish("address", new JsonObject());
 
@@ -126,11 +133,15 @@ class InboxIT {
         .atMost(Duration.ofSeconds(1))
         .untilAsserted(
             () -> {
-              PlatformTransactionManager.begin();
-              var rows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
-              log.info("before delay {}", rows);
-              assertThat(rows).hasSize(1);
-              PlatformTransactionManager.commit();
+              provider
+                  .transactionManager()
+                  .executeWithoutResult(
+                      () -> {
+                        List<Row> inboxRows =
+                            getInboxRows(provider.jdbcQueryRunnerFactory().create());
+                        log.info("before delay {}", inboxRows);
+                        assertThat(inboxRows).hasSize(1);
+                      });
               checkpoint.flag();
             });
 
@@ -139,11 +150,15 @@ class InboxIT {
         .atMost(Duration.ofSeconds(4))
         .untilAsserted(
             () -> {
-              PlatformTransactionManager.begin();
-              var rows = getInboxRows(provider.jdbcQueryRunnerFactory().create());
-              log.info("after delay {}", rows);
-              assertThat(rows).isEmpty();
-              PlatformTransactionManager.commit();
+              provider
+                  .transactionManager()
+                  .executeWithoutResult(
+                      () -> {
+                        List<Row> inboxRows =
+                            getInboxRows(provider.jdbcQueryRunnerFactory().create());
+                        log.info("after delay {}", inboxRows);
+                        assertThat(inboxRows).isEmpty();
+                      });
               checkpoint.flag();
             });
   }

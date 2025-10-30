@@ -45,7 +45,7 @@ public class EntityGenerator {
           new Database()
               .withName("org.jooq.meta.postgres.PostgresDatabase")
               .withIncludes(".*")
-              .withExcludes(String.join("|", flyway.getConfiguration().getTable()))
+              .withExcludes(String.join("|", flyway.getConfiguration().getTable(), "|"))
               .withInputSchema("public")
               .withOutputSchemaToDefault(true)
               .withRecordVersionFields("version");
